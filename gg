@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#171419">
+<title>平行人生販賣機｜PARALLEL LIFE VENDING</title>
+<style>
+:root{
+  --ink:#171419; --ink2:#28212a; --paper:#f4e7d7; --paper2:#e9d5c2;
+  --pink:#ef8eaa; --pink2:#d95d83; --cream:#fff6e9; --muted:#bca99e;
+  --mint:#b9c9ad; --yellow:#f1c875; --line:rgba(244,231,215,.24);
+  --shadow:0 18px 45px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; min-height:100vh; color:var(--paper); background:var(--ink);
+  font-family: ui-rounded,"Trebuchet MS","Noto Sans TC",system-ui,sans-serif;
+  overflow-x:hidden;
+}
+body:before{
+  content:""; position:fixed; inset:0; pointer-events:none; opacity:.14; z-index:0;
+  background-image:radial-gradient(#f5d9c8 .65px,transparent .65px);
+  background-size:7px 7px; mix-blend-mode:screen;
+}
+button{font:inherit; cursor:pointer}
+button:focus-visible{outline:3px solid var(--yellow);outline-offset:4px}
+.wrap{position:relative;z-index:1;width:min(1120px,92vw);margin:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:24px 0 12px;gap:16px}
+.brand{font-size:12px;letter-spacing:.22em;color:var(--pink);font-weight:900}
+.sound-toggle{
+  border:1px solid var(--line);background:transparent;color:var(--paper);
+  padding:9px 14px;border-radius:99px;font-size:12px;letter-spacing:.08em;
+}
+.sound-toggle[aria-pressed="true"]{background:var(--pink);color:var(--ink);border-color:var(--pink)}
+.hero{text-align:center;padding:32px 0 22px}
+.eyebrow{color:var(--yellow);font-size:11px;letter-spacing:.28em;font-weight:800}
+h1{font-size:clamp(34px,7vw,70px);line-height:1.08;letter-spacing:.04em;margin:12px 0 10px;font-weight:1000}
+h1 span{color:var(--pink)}
+.subtitle{color:#d8c5b8;font-size:14px;line-height:1.9;margin:0 auto;max-width:550px}
+.rule{display:flex;align-items:center;gap:14px;justify-content:center;margin:26px auto 30px;color:var(--pink);font-size:10px;letter-spacing:.25em}
+.rule:before,.rule:after{content:"";height:1px;width:70px;background:var(--line)}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(290px,.8fr);gap:clamp(24px,5vw,70px);align-items:center;padding:10px 0 70px}
+.machine-wrap{position:relative;display:flex;justify-content:center;align-items:center;min-height:470px}
+.machine{
+  position:relative;width:min(390px,90%);min-height:470px;padding:18px 18px 22px;
+  background:var(--pink);border:5px solid var(--paper);border-radius:28px 28px 18px 18px;
+  box-shadow:var(--shadow), inset 0 0 0 5px rgba(23,20,25,.12);
+  transform:rotate(-1deg);
+}
+.machine:before{content:"";position:absolute;left:50%;top:-17px;transform:translateX(-50%);width:76px;height:12px;background:var(--paper);border-radius:9px 9px 0 0}
+.machine-top{display:flex;justify-content:space-between;align-items:center;color:var(--ink);font-weight:1000;font-size:10px;letter-spacing:.12em;margin:0 3px 12px}
+.machine-window{
+  height:215px;background:var(--ink);border:5px solid #f8c4d1;border-radius:13px;
+  padding:12px;position:relative;overflow:hidden;box-shadow:inset 0 0 20px #000;
+}
+.window-label{font-size:9px;color:var(--pink);letter-spacing:.18em;text-align:center}
+.shelf{height:1px;background:#72505c;margin:14px 0;position:relative}
+.shelf:after{content:"";position:absolute;right:0;top:-3px;width:9px;height:7px;background:var(--yellow);border-radius:2px}
+.vending-items{display:flex;justify-content:space-around;align-items:end;height:145px;gap:8px}
+.capsule{width:54px;height:88px;border-radius:26px 26px 13px 13px;background:var(--cream);border:3px solid var(--pink);position:relative;box-shadow:0 5px 0 #a84e6b;display:flex;align-items:center;justify-content:center;color:var(--ink);font-size:22px}
+.capsule:nth-child(2){height:105px;background:var(--yellow)}
+.capsule:nth-child(3){height:78px;background:var(--mint)}
+.capsule:after{content:"";position:absolute;bottom:9px;left:7px;right:7px;height:3px;background:rgba(23,20,25,.15);border-radius:5px}
+.machine-controls{display:grid;grid-template-columns:1fr 76px;gap:14px;align-items:center;margin:18px 4px 0}
+.slot-area{color:var(--ink);font-weight:1000;font-size:10px;letter-spacing:.13em}
+.slot{height:28px;background:#2a2027;border:3px solid #f8c4d1;border-radius:7px;margin-top:7px;box-shadow:inset 0 3px 7px #000}
+.lever-zone{display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--ink);font-size:9px;font-weight:900}
+.lever{width:48px;height:48px;border-radius:50%;border:4px solid var(--paper);background:var(--ink);color:var(--pink);font-size:22px;box-shadow:0 4px 0 #9e4662}
+.lever:active{transform:translateY(3px);box-shadow:0 1px 0 #9e4662}
+.machine-foot{position:absolute;bottom:-14px;left:10%;right:10%;height:14px;background:#c75f80;border:3px solid var(--paper);border-top:0;border-radius:0 0 12px 12px}
+.spark{position:absolute;color:var(--yellow);font-size:25px;animation:twinkle 2s infinite ease-in-out}
+.spark.s1{top:35px;left:5%}.spark.s2{right:4%;bottom:80px;animation-delay:.8s}.spark.s3{right:13%;top:75px;animation-delay:1.2s}
+@keyframes twinkle{50%{transform:scale(.55) rotate(30deg);opacity:.45}}
+.panel{padding:8px 0}
+.step-tag{color:var(--pink);font-size:11px;letter-spacing:.22em;font-weight:900}
+.panel h2{font-size:clamp(24px,4vw,34px);margin:10px 0 8px;line-height:1.3}
+.panel-copy{color:#cbb8ad;font-size:13px;line-height:1.8;margin:0 0 22px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice{
+  text-align:left;padding:15px 14px;border:1px solid var(--line);border-radius:3px;
+  background:transparent;color:var(--paper);transition:.2s;min-height:88px;position:relative;
+}
+.choice:hover{border-color:var(--pink);transform:translateY(-2px)}
+.choice.selected{background:var(--pink);color:var(--ink);border-color:var(--pink);box-shadow:4px 4px 0 var(--paper)}
+.choice .emoji{font-size:22px;display:block;margin-bottom:7px}
+.choice strong{font-size:13px;display:block}
+.choice small{font-size:10px;opacity:.75;display:block;margin-top:4px}
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.primary,.secondary{
+  border:0;padding:13px 20px;font-weight:1000;letter-spacing:.08em;font-size:12px;
+  transition:transform .18s,background .18s;
+}
+.primary{background:var(--pink);color:var(--ink);box-shadow:4px 4px 0 var(--paper)}
+.primary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--paper)}
+.primary:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.secondary{background:transparent;border:1px solid var(--line);color:var(--paper)}
+.secondary:hover{border-color:var(--pink);color:var(--pink)}
+.hint{font-size:11px;color:#a9958b;margin-top:15px;min-height:20px}
+.machine.shake{animation:shake .55s ease}
+@keyframes shake{0%,100%{transform:rotate(-1deg)}15%{transform:translateX(-8px) rotate(-3deg)}35%{transform:translateX(7px) rotate(2deg)}55%{transform:translateX(-5px) rotate(-2deg)}75%{transform:translateX(4px) rotate(1deg)}}
+.ticket-zone{display:none;margin:5px 0 70px}
+.ticket-zone.show{display:block;animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(35px) rotate(2deg)}to{opacity:1;transform:translateY(0) rotate(0)}}
+.ticket-heading{text-align:center;margin-bottom:24px}
+.ticket-heading .eyebrow{margin-bottom:8px}
+.ticket{
+  max-width:720px;margin:auto;background:var(--paper);color:var(--ink);position:relative;
+  padding:clamp(22px,5vw,44px);box-shadow:var(--shadow);
+  clip-path:polygon(0 0,100% 0,100% 96%,98% 100%,96% 96%,94% 100%,92% 96%,90% 100%,88% 96%,86% 100%,84% 96%,82% 100%,80% 96%,78% 100%,76% 96%,74% 100%,72% 96%,70% 100%,68% 96%,66% 100%,64% 96%,62% 100%,60% 96%,58% 100%,56% 96%,54% 100%,52% 96%,50% 100%,48% 96%,46% 100%,44% 96%,42% 100%,40% 96%,38% 100%,36% 96%,34% 100%,32% 96%,30% 100%,28% 96%,26% 100%,24% 96%,22% 100%,20% 96%,18% 100%,16% 96%,14% 100%,12% 96%,10% 100%,8% 96%,6% 100%,4% 96%,2% 100%,0 96%);
+}
+.ticket:before,.ticket:after{content:"";position:absolute;top:50%;width:26px;height:26px;border-radius:50%;background:var(--ink);transform:translateY(-50%)}
+.ticket:before{left:-13px}.ticket:after{right:-13px}
+.ticket-top{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #a89589;padding-bottom:14px;font-size:10px;font-weight:1000;letter-spacing:.16em}
+.ticket-main{display:grid;grid-template-columns:1fr 130px;gap:20px;align-items:center;padding:26px 0}
+.ticket-kicker{color:#a64c6b;font-size:10px;font-weight:1000;letter-spacing:.2em}
+.ticket h3{font-size:clamp(28px,5vw,48px);line-height:1.12;margin:10px 0}
+.ticket-desc{font-size:14px;line-height:1.9;color:#51434a;max-width:480px}
+.ticket-stamp{width:116px;height:116px;border:3px double var(--pink2);border-radius:50%;display:grid;place-items:center;text-align:center;color:var(--pink2);font-weight:1000;transform:rotate(12deg);font-size:13px;line-height:1.5}
+.ticket-bottom{border-top:1px dashed #a89589;padding-top:13px;display:flex;justify-content:space-between;gap:12px;font-size:10px;color:#74636a;letter-spacing:.08em}
+.ticket-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:24px auto 0}
+.saved-section{padding:10px 0 70px;border-top:1px solid var(--line)}
+.saved-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:16px}
+.saved-head h2{margin:0;font-size:22px}
+.saved-head p{margin:0;color:#a9958b;font-size:11px}
+.saved-list{display:flex;gap:12px;overflow-x:auto;padding:8px 3px 16px}
+.saved-item{flex:0 0 205px;border:1px solid var(--line);padding:13px;background:transparent;position:relative}
+.saved-item strong{display:block;color:var(--pink);font-size:14px;margin:7px 0}
+.saved-item small{color:#b9a79d;font-size:10px;line-height:1.6}
+.saved-item button{margin-top:10px;background:none;border:0;color:var(--yellow);font-size:10px;padding:0;text-decoration:underline}
+.empty{color:#927e75;font-size:12px;padding:18px 0}
+.footer{padding:22px 0 35px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;color:#806f69;font-size:10px;letter-spacing:.08em}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--cream);color:var(--ink);padding:12px 18px;font-size:12px;font-weight:900;z-index:5;box-shadow:var(--shadow);transition:.25s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:760px){
+ .stage{grid-template-columns:1fr;gap:20px;padding-bottom:45px}
+ .machine-wrap{min-height:430px;order:0}.machine{width:min(360px,88vw);min-height:430px}
+ .machine-window{height:190px}.vending-items{height:120px}
+ .panel{max-width:540px;margin:auto;width:100%}
+ .hero{padding-top:24px}.topbar{padding-top:17px}
+}
+@media(max-width:420px){
+ .choices{gap:8px}.choice{padding:12px 10px;min-height:82px}
+ .ticket-main{grid-template-columns:1fr}.ticket-stamp{width:82px;height:82px;font-size:10px}
+ .ticket-bottom{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">✳ PARALLEL LIFE LAB / 001</div>
+    <button class="sound-toggle" id="soundToggle" aria-pressed="false" type="button">♫ 音效：關</button>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">IF YOU COULD CHOOSE AGAIN…</div>
+    <h1>平行人生<span>販賣機</span></h1>
+    <p class="subtitle">投下一點好奇心，轉動命運的旋鈕。<br>這次，讓另一個版本的你，替你活一次。</p>
+    <div class="rule">SELECT YOUR POSSIBILITY</div>
+  </section>
+
+  <main>
+    <section class="stage" aria-label="平行人生販賣機操作區">
+      <div class="machine-wrap">
+        <span class="spark s1">✳</span><span class="spark s2">✦</span><span class="spark s3">✧</span>
+        <div class="machine" id="machine">
+          <div class="machine-top"><span>PARALLEL LIFE</span><span>NO. 0088</span></div>
+          <div class="machine-window">
+            <div class="window-label">CHOOSE • TURN • DISCOVER</div>
+            <div class="shelf"></div>
+            <div class="vending-items" aria-hidden="true">
+              <div class="capsule">☾</div><div class="capsule">✿</div><div class="capsule">★</div>
+            </div>
+          </div>
+          <div class="machine-controls">
+            <div class="slot-area">YOUR POSSIBILITY<div class="slot"></div></div>
+            <div class="lever-zone"><button class="lever" id="lever" type="button" aria-label="拉下販賣機拉桿">↻</button><span>PULL</span></div>
+          </div>
+          <div class="machine-foot"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="step-tag" id="stepTag">STEP 01 / 選擇方向</div>
+        <h2 id="panelTitle">如果人生可以重選，<br>你想走向哪裡？</h2>
+        <p class="panel-copy" id="panelCopy">選一個此刻最讓你心動的方向。販賣機會替你抽出一張來自平行宇宙的命運票券。</p>
+        <div class="choices" id="choices">
+          <button class="choice" data-choice="冒險" type="button"><span class="emoji">🧭</span><strong>遠方冒險</strong><small>去沒去過的地方</small></button>
+          <button class="choice" data-choice="創作" type="button"><span class="emoji">🎨</span><strong>自由創作</strong><small>把喜歡變成日常</small></button>
+          <button class="choice" data-choice="愛與連結" type="button"><span class="emoji">♡</span><strong>愛與連結</strong><small>遇見重要的人</small></button>
+          <button class="choice" data-choice="未知" type="button"><span class="emoji">☄</span><strong>未知可能</strong><small>交給宇宙安排</small></button>
+        </div>
+        <div class="action-row">
+          <button class="primary" id="drawBtn" type="button" disabled>投入硬幣・抽取票券 ↗</button>
+          <button class="secondary" id="resetBtn" type="button">重新開始</button>
+        </div>
+        <p class="hint" id="hint" role="status" aria-live="polite">先選擇一種人生方向，拉桿就會亮起來。</p>
+      </div>
+    </section>
+
+    <section class="ticket-zone" id="ticketZone" aria-live="polite">
+      <div class="ticket-heading"><div class="eyebrow">YOUR PARALLEL LIFE HAS ARRIVED</div></div>
+      <article class="ticket" id="ticket">
+        <div class="ticket-top"><span>✳ PARALLEL LIFE TICKET</span><span id="ticketNo">PL-0001</span></div>
+        <div class="ticket-main">
+          <div>
+            <div class="ticket-kicker" id="ticketCategory">A LIFE OF ADVENTURE</div>
+            <h3 id="ticketTitle">在海邊開一間深夜書店</h3>
+            <p class="ticket-desc" id="ticketDesc"></p>
+          </div>
+          <div class="ticket-stamp">ANOTHER<br>YOU<br>✳</div>
+        </div>
+        <div class="ticket-bottom"><span>VALID IN ONE UNIVERSE ONLY</span><span id="ticketDate">ISSUED JUST NOW</span></div>
+      </article>
+      <div class="ticket-actions">
+        <button class="primary" id="saveBtn" type="button">♡ 收藏這張票券</button>
+        <button class="secondary" id="againBtn" type="button">再抽一張</button>
+      </div>
+    </section>
+
+    <section class="saved-section">
+      <div class="saved-head"><h2>收藏的平行人生 <span style="color:var(--pink)">✳</span></h2><p>把想像過的自己，好好收起來。</p></div>
+      <div class="saved-list" id="savedList"><div class="empty" id="emptySaved">目前還沒有收藏。抽到喜歡的命運，就把它留下吧。</div></div>
+    </section>
+  </main>
+  <footer class="footer"><span>PARALLEL LIFE VENDING MACHINE</span><span>MADE OF MAYBES & LITTLE DREAMS ✳</span></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const data = {
+    "冒險":[
+      ["把家搬到有海風的地方","你在一座靠海的小鎮醒來，白天替旅人帶路，傍晚沿著堤岸散步。你終於明白，生活不必一直趕路，也可以是一段很長的風景。"],
+      ["成為凌晨出發的旅行寫作者","你的行李永遠半滿，筆記本永遠有空白。你用故事交換陌生城市的早餐，也在每次迷路時，找到一點新的自己。"],
+      ["在山裡經營一間小旅店","窗外有雲霧、木頭香和慢慢煮開的茶。每個來訪的人都帶著故事，而你學會把安靜也當成一種豐盛。"],
+      ["搭上沒有目的地的列車","你買了單程票，沿途在小站下車。沒有精準計畫的日子，反而讓你遇見最意想不到的風景。"]
+    ],
+    "創作":[
+      ["開一間只賣自己作品的小店","店裡放著你做的陶器、畫和奇怪的小物。有人推門進來說很喜歡，你忽然覺得，那些曾經偷偷喜歡的事都值得被看見。"],
+      ["成為替城市畫畫的人","你背著畫具穿梭街區，把轉角的早餐店、午後的窗和路人的笑容畫下來。城市因為你的眼睛，多了一本溫柔的日記。"],
+      ["在森林旁寫一本書","你把日常裡沒說出口的感受寫成故事。某個讀者寄來一封信，說你的文字陪他度過一段夜晚。"],
+      ["組一個小小的音樂團","你們在地下室練團，在不大的舞台上唱歌。每次演出都不完美，但每次都真實得發亮。"]
+    ],
+    "愛與連結":[
+      ["和老朋友開一間晚餐食堂","每天傍晚，熟悉的人帶著新朋友來吃飯。餐桌總是太擠、笑聲總是太大，而你終於有了想回去的地方。"],
+      ["在陌生城市遇見靈魂夥伴","你們從一場迷路開始，聊到天亮。這段關係沒有標準答案，只有願意聽懂彼此的耐心。"],
+      ["成為社區裡的故事收集者","你開始拜訪鄰居，記下他們的回憶。慢慢地，一條街變成一個家，而你知道連結可以從一句你好開始。"],
+      ["把更多時間留給自己與家人","你不再把行程塞滿，開始一起散步、煮飯和發呆。那些看似普通的片刻，成了最珍貴的收藏。"]
+    ],
+    "未知":[
+      ["住進一座會移動的房子","你的家每個月換一個地方，有時靠近森林，有時停在城市邊緣。你不再急著定義歸屬，因為每個清晨都能重新開始。"],
+      ["成為深夜電台的神秘主持人","午夜十二點，你用聲音陪伴陌生人。沒有人知道你的模樣，但有很多人記得你說過的那句晚安。"],
+      ["在小島上開一間奇怪博物館","館裡收藏沒寄出的信、遺失的鈕扣和人們的小願望。每個物件都有故事，而你負責讓它們繼續發光。"],
+      ["發明一種交換夢境的機器","你收集人們的夢，做成一場場小型展覽。現實與想像的邊界變得柔軟，連明天都充滿驚喜。"]
+    ]
+  };
+  const categoryLabel = {"冒險":"A LIFE OF ADVENTURE","創作":"A LIFE OF CREATION","愛與連結":"A LIFE OF CONNECTION","未知":"A LIFE UNKNOWN"};
+  let selected = "";
+  let current = null;
+  let soundOn = false;
+  let audioContext = null;
+  let saved = [];
+
+  function tone(freq=440, duration=.12, type="sine", volume=.035){
+    if(!soundOn) return;
+    try{
+      audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioContext.createOscillator(), gain = audioContext.createGain();
+      osc.type=type; osc.frequency.setValueAtTime(freq,audioContext.currentTime);
+      gain.gain.setValueAtTime(volume,audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+duration);
+      osc.connect(gain);gain.connect(audioContext.destination);osc.start();osc.stop(audioContext.currentTime+duration);
+    }catch(e){ /* 音效不可用時不影響遊戲 */ }
+  }
+  function chime(){tone(523,.12);setTimeout(()=>tone(659,.13),110);setTimeout(()=>tone(784,.2),230)}
+  function toast(message){
+    $("toast").textContent=message;$("toast").classList.add("show");
+    clearTimeout(toast.timer);toast.timer=setTimeout(()=>$("toast").classList.remove("show"),2100);
+  }
+  function choose(direction){
+    selected=direction;
+    document.querySelectorAll(".choice").forEach(btn=>btn.classList.toggle("selected",btn.dataset.choice===direction));
+    $("drawBtn").disabled=false;
+    $("hint").textContent=`已選擇「${direction}」——準備好讓另一個自己登場了嗎？`;
+    $("stepTag").textContent="STEP 02 / 準備抽取";
+    tone(440,.08);
+  }
+  function makeTicket(){
+    const options=data[selected];
+    const item=options[Math.floor(Math.random()*options.length)];
+    const serial=String(Math.floor(1000+Math.random()*9000));
+    const now=new Date();
+    return {direction:selected,title:item[0],desc:item[1],serial,issued:now.toLocaleDateString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit"})};
+  }
+  function renderTicket(ticket){
+    current=ticket;
+    $("ticketNo").textContent="PL-"+ticket.serial;
+    $("ticketCategory").textContent=categoryLabel[ticket.direction];
+    $("ticketTitle").textContent=ticket.title;
+    $("ticketDesc").textContent=ticket.desc;
+    $("ticketDate").textContent="ISSUED "+ticket.issued;
+    $("ticketZone").classList.remove("show");
+    void $("ticketZone").offsetWidth;
+    $("ticketZone").classList.add("show");
+    $("saveBtn").textContent="♡ 收藏這張票券";
+    $("saveBtn").disabled=false;
+    $("ticketZone").scrollIntoView({behavior:"smooth",block:"center"});
+  }
+  function draw(){
+    if(!selected){toast("先選擇一種人生方向！");return}
+    $("drawBtn").disabled=true;$("lever").disabled=true;
+    $("hint").textContent="販賣機正在運轉……平行宇宙連線中。";
+    $("machine").classList.remove("shake");void $("machine").offsetWidth;$("machine").classList.add("shake");
+    tone(180,.12,"square",.025);setTimeout(()=>tone(240,.14,"square",.025),150);setTimeout(()=>tone(320,.16,"triangle",.025),300);
+    setTimeout(()=>{
+      renderTicket(makeTicket());chime();
+      $("hint").textContent="票券已送達！也許另一個你，正在過著這樣的生活。";
+      $("stepTag").textContent="STEP 03 / 命運已送達";
+      $("lever").disabled=false;$("drawBtn").disabled=false;
+      toast("咔噠！你的平行人生已出貨。");
+    },720);
+  }
+  function saveCurrent(){
+    if(!current)return;
+    if(saved.some(x=>x.serial===current.serial)){toast("這張票券已經收藏過囉！");return}
+    saved.unshift({...current});
+    $("saveBtn").textContent="✓ 已收藏";
+    $("saveBtn").disabled=true;
+    renderSaved();tone(660,.1);setTimeout(()=>tone(880,.18),100);toast("已放進你的平行人生收藏冊！");
+  }
+  function renderSaved(){
+    const list=$("savedList");list.innerHTML="";
+    if(!saved.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="目前還沒有收藏。抽到喜歡的命運，就把它留下吧。";list.append(empty);return}
+    saved.forEach(ticket=>{
+      const item=document.createElement("article");item.className="saved-item";
+      const meta=document.createElement("small");meta.textContent=`${ticket.direction} / PL-${ticket.serial}`;
+      const title=document.createElement("strong");title.textContent=ticket.title;
+      const desc=document.createElement("small");desc.textContent=ticket.desc;
+      const remove=document.createElement("button");remove.type="button";remove.textContent="移除收藏";
+      remove.addEventListener("click",()=>{saved=saved.filter(x=>x.serial!==ticket.serial);renderSaved();toast("已從收藏中移除。")});
+      item.append(meta,title,desc,remove);list.append(item);
+    });
+  }
+  function reset(){
+    selected="";current=null;
+    document.querySelectorAll(".choice").forEach(btn=>btn.classList.remove("selected"));
+    $("drawBtn").disabled=true;$("lever").disabled=false;
+    $("stepTag").textContent="STEP 01 / 選擇方向";
+    $("panelTitle").innerHTML="如果人生可以重選，<br>你想走向哪裡？";
+    $("panelCopy").textContent="選一個此刻最讓你心動的方向。販賣機會替你抽出一張來自平行宇宙的命運票券。";
+    $("hint").textContent="先選擇一種人生方向，拉桿就會亮起來。";
+    $("ticketZone").classList.remove("show");
+    $("machine").classList.remove("shake");
+    $("ticketZone").style.display=""; // 保留原本 display 規則
+    toast("旅程重置了。這次想去哪個宇宙？");
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  document.querySelectorAll(".choice").forEach(btn=>btn.addEventListener("click",()=>choose(btn.dataset.choice)));
+  $("drawBtn").addEventListener("click",draw);
+  $("lever").addEventListener("click",draw);
+  $("saveBtn").addEventListener("click",saveCurrent);
+  $("againBtn").addEventListener("click",()=>{if(!selected){reset();return}draw()});
+  $("resetBtn").addEventListener("click",reset);
+  $("soundToggle").addEventListener("click",()=>{
+    soundOn=!soundOn;
+    $("soundToggle").setAttribute("aria-pressed",String(soundOn));
+    $("soundToggle").textContent=soundOn?"♫ 音效：開":"♫ 音效：關";
+    if(soundOn){tone(660,.1);toast("音效已開啟。")}else toast("音效已關閉。");
+  });
+})();
+</script>
+</body>
+</html>
